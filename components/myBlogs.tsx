@@ -19,15 +19,17 @@ interface Blog {
 }
 
 const MyBlogs = (props: Props) => {
-
-    const [blog, setBlog] = useState<Blog[]>([])
+    const [blog, setBlog] = useState<Blog[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetch('/api/blog')
             .then((res) => res.json())
-            .then((res) => setBlog(res));
+            .then((res) => {
+                setBlog(res);
+                setLoading(false); // Set loading to false once blogs are fetched
+            });
     }, [setBlog]);
-
 
     const deleteBlog = async (id: any) => {
         try {
@@ -46,40 +48,46 @@ const MyBlogs = (props: Props) => {
         }
     };
 
-    let selectBlog = blog?.slice(0, 4)
+    let selectBlog = blog?.slice(0, 4);
 
     const { user, setUser }: any = useContext(Context);
 
-
     return (
         <>
-            <div id='features' className='my-16'>
-                <div className='font-Outfit w-[88%] xl:w-[50%] mx-auto text-center space-y-7'>
-                    <p className='text-3xl xl:text-[40px] font-semibold '>We’re in the business of bringing out the best in our clients.</p>
-                    <p className='text-[22px] font-[550]'>In a time of marketing start-ups, there is something reassuring about 20 years of experience delivering powerful creative solutions for clients of all sizes in so many different sectors.</p>
+            {loading ? (
+                <div className="loading-container">
+                    <div className="loading-spinner"></div>
                 </div>
-                <div className=' w-sreen lg:w-[90%]  mx-auto gap-y-11 my-10  sm:grid sm:grid-cols-2'>
-                    {selectBlog?.map((dt, i) =>
-                        <div key={i} className='w-[90%] xl:w-[33rem]  my-8 sm:my-0 mx-auto md:even:mt-14'>
-                            <Image className='rounded-xl h-[40vh] md:h-[45vh] xl:h-[25rem] ' src={dt.image} alt={dt.name} width={700} height={700} />
-                            {user && user.role === "admin" &&(<div className='text-red-400 text-2xl my-2 cursor-pointer' onClick={() => deleteBlog(dt._id)}>
-                                <AiFillDelete />
+            ) : (
+                // Render blogs once loaded
+                <div id='features' className='my-16'>
+                    <div className='font-Outfit w-[88%] xl:w-[50%] mx-auto text-center space-y-7'>
+                        <p className='text-3xl xl:text-[40px] font-semibold '>We’re in the business of bringing out the best in our clients.</p>
+                        <p className='text-[22px] font-[550]'>In a time of marketing start-ups, there is something reassuring about 20 years of experience delivering powerful creative solutions for clients of all sizes in so many different sectors.</p>
+                    </div>
+                    <div className=' w-sreen lg:w-[90%]  mx-auto gap-y-11 my-10  sm:grid sm:grid-cols-2'>
+                        {selectBlog?.map((dt, i) =>
+                            <div key={i} className='w-[90%] xl:w-[33rem]  my-8 sm:my-0 mx-auto md:even:mt-14'>
+                                <Image className='rounded-xl h-[40vh] md:h-[45vh] xl:h-[25rem] ' src={dt.image} alt={dt.name} width={700} height={700} />
+                                {user && user.role === "admin" && (<div className='text-red-400 text-2xl my-2 cursor-pointer' onClick={() => deleteBlog(dt._id)}>
+                                    <AiFillDelete />
+                                </div>
+                                )}
+                                <div className='px-4 space-y-5 font-Sf'>
+                                    <p className='text-[19px] font-semibold text-[#379475]'>{dt.category}</p>
+                                    <p className='text-[19px] font-semibold'>{dt.name}</p>
+                                    <Link href={`/blog/${dt._id}`} className='flex items-center text-[19px] font-semibold w-fit'>
+                                        <p>Learn more</p>
+                                        <LiaLongArrowAltRightSolid size={30} />
+                                    </Link>
+                                </div>
                             </div>
-                            )}
-                            <div className='px-4 space-y-5 font-Sf'>
-                                <p className='text-[19px] font-semibold text-[#379475]'>{dt.category}</p>
-                                <p className='text-[19px] font-semibold'>{dt.name}</p>
-                                <Link href={`/blog/${dt._id}`} className='flex items-center text-[19px] font-semibold w-fit'>
-                                    <p>Learn more</p>
-                                    <LiaLongArrowAltRightSolid size={30} />
-                                </Link>
-                            </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
         </>
-    )
-}
+    );
+};
 
 export default MyBlogs
