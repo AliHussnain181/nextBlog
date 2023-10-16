@@ -71,9 +71,9 @@ const MyBlogs = (props: Props) => {
                 </div>
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 my-7 font-Sf'>
                     {filteredBlogs.map((dt, i) => (
-                        <div key={i} className='rounded-sm overflow-hidden shadow-lg mx-2'>
+                        <div key={i} className='rounded-sm  shadow-lg mx-2'>
                             <Image
-                                className='w-full h-60 hover:scale-110 transition-all duration-500'
+                                className='w-full h-60 hover:scale-105 transition-all duration-500'
                                 src={dt.image}
                                 alt={dt.name}
                                 width={700}

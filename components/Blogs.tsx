@@ -65,8 +65,8 @@ const Blogs = (props: Props) => {
       </div>
       <div className={`flex flex-row h-[90vh] w-[90vw] xl:w-[60vw] mx-auto font-Outfit transition-all duration-500 mb-16`} style={{ transform: `translateX(-${currentScroll * 100}%)` }}>
         {blog?.map((blog, i) => (
-          <div key={i} className="h[80vh] w-[100%]  px-1 flex-shrink-0  xl:h-[90vh] bg-[#0C312A] relative ">
-            <Image src={blog.image} width={1000} height={1000} alt='blogs' className='h-full rounded-2xl opacity-50' />
+          <div key={i} className=" w-[100%]  px-1 flex-shrink-0  xl:h-[90vh] bg-[#0C312A] relative ">
+            <Image src={blog.image} width={1000} height={1000} alt='blogs' className='h-full rounded-md opacity-50' />
             <div className='absolute bottom-0 left12 mx-7'>
               <p className='text-3xl'>{blog.category}</p>
               <p className='text-2xl'>{blog.name}</p>

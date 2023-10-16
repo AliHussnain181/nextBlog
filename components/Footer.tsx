@@ -15,11 +15,11 @@ const Footer = (props: Props) => {
                     </div>
                     <p className='text-white text-2xl font-semibold '>Where thoughtful strategy meets beautiful branding, incredible engineering and visionary campaigns.</p>
                     <div className='flex space-x-4'>
-                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href="https://www.facebook.com/" target='_blank' ><FiFacebook /></Link>
-                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href="https://www.facebook.com/" target='_blank' ><FiLinkedin /></Link>
-                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href="https://www.facebook.com/" target='_blank' ><AiOutlineInstagram /></Link>
-                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href="https://www.facebook.com/" target='_blank' ><FiGithub /></Link>
-                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href="https://www.facebook.com/" target='_blank' ><FiTwitter /></Link>
+                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href=""  ><FiFacebook /></Link>
+                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href=""  ><FiLinkedin /></Link>
+                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href=""  ><AiOutlineInstagram /></Link>
+                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href=""  ><FiGithub /></Link>
+                        <Link className='text-2xl p-3  rounded-full bg-[#154C41]' href=""  ><FiTwitter /></Link>
                     </div>
                 </div>
                 <div className='flex font-Roboto lg:w-[50%]'>
@@ -33,10 +33,10 @@ const Footer = (props: Props) => {
                     </div>
                     <div className='w-[50%] px-3 text-white text-xl space-y-5 '>
                         <p className='text-[#37B33D] text-2xl font-semibold pb-5'>Quicklinks</p>
-                        <Link href="/" target="_blank" className='flex' rel="noopener noreferrer">Who We Are</Link>
-                        <Link href="/" target="_blank" className="flex" rel="noopener noreferrer">Our Work</Link>
-                        <Link href="/" target="_blank" className="flex" rel="noopener noreferrer">Tech Support</Link>
-                        <Link href="/" target="_blank" className="flex" rel="noopener noreferrer">Contact Us</Link>
+                        <Link href=""  className='flex' rel="noopener noreferrer">Who We Are</Link>
+                        <Link href=""  className="flex" rel="noopener noreferrer">Our Work</Link>
+                        <Link href=""  className="flex" rel="noopener noreferrer">Tech Support</Link>
+                        <Link href=""  className="flex" rel="noopener noreferrer">Contact Us</Link>
                     </div>
                 </div>
             </div>

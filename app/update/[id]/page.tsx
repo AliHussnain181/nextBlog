@@ -143,8 +143,7 @@ const Page = ({ params }: any) => {
                     init={editorConfig}
                     onEditorChange={handleEditorChange}
                     value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                />
+                    />
 
                 <button
                     type="submit"

@@ -68,7 +68,6 @@ const MyEditor = () => {
       'anchor',
       'searchreplace',
       'visualblocks',
-      'code',
       'fullscreen',
       'insertdatetime',
       'media',
@@ -77,7 +76,6 @@ const MyEditor = () => {
       'help',
       'wordcount',
       'anchor',
-      'code'
     ],
     toolbar:
       "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent code |removeformat | help",

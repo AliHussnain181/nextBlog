@@ -30,31 +30,26 @@ const Blog = ({ params }: any) => {
   }, [params.id]);
 
   return (
-    <div className="blog-container font-Sf">
+    <div className="p-4 my-28 h-auto ">
       {data ? (
-        <div className="blog-content">
-          <div className="blog-image">
-            <div className="image-overlay"></div>
+        <div className="shadow-md p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 rounded-md max-w-4xl mx-auto">
+          <div className="relative mb-4 ">
             <Image
-              width={1000}
-              height={1000}
+              width={2000}
+              height={2000}
               src={data.image}
               alt={data.name}
-              className="rounded-lg img"
+              className="rounded-md object-center  h-64 sm:h-80 md:h-96"
             />
           </div>
-          <div className="blog-text">
-            <p className="blog-title">{data.name}</p>
-            <div className="blog-description">
-              <div className="scrollable-text">{parse(data.content)}</div>
-            </div>
-            <p className="blog-category">
-              Category: {data.category}
-            </p>
+          <div className="overflow-x-hidden">
+            <p className="text-xl sm:text-3xl font-semibold mx-auto my-2">{data.name}</p>
+            <div className="text-gray-800">{parse(data.content)}</div>
+            <p className="mt-4 text-gray-600">Category: {data.category}</p>
           </div>
         </div>
       ) : (
-        <p className="loading-text">Loading blog post...</p>
+        <p className="text-center">Loading blog post...</p>
       )}
     </div>
   );

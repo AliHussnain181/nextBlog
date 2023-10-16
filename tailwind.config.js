@@ -15,5 +15,6 @@ module.exports = {
       Sf:["sofia-pro" ,"sans-serif"]
     },
   },  
-  plugins: [],
+  plugins: [
+  ],
 }
