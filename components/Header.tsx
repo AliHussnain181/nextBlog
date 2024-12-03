@@ -64,9 +64,9 @@ const Header = (props: Props) => {
                     </div>
                     <div onClick={menuBar} className='w-[50%] flex flex-col justify-center items-center  bg-cover bg-no-repeat bg-[url(/hero.jpg)]' >
                         <div className='text-white  pt-32 font-Sf text-center w-[80%] mx-auto space-y-9'>
-                            <p className='text-5xl leading-[3rem]'>Where thoughtful strategy meets beautiful branding, incredible engineering and visionary campaigns.</p>
+                            <p className='text-3xl xl:text-4xl leading-[3rem]'>Where thoughtful strategy meets beautiful branding, incredible engineering and visionary campaigns.</p>
                             <p className='text-2xl'>Punjab Pakistan</p>
-                            <button className='border-green-500 border-[3px] text-2xl py-3 px-9 rounded-full hover:bg-green-500 hover:text-white transition-all duration-300'>
+                            <button className='border-green-500 border-[3px] text-xl py-3 px-9 rounded-full hover:bg-green-500 hover:text-white transition-all duration-300'>
                                 <Link href="" >Get in touch</Link>
                             </button>
                             <div className='flex justify-center space-x-4'>

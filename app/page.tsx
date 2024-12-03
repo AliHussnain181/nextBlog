@@ -5,9 +5,10 @@ import MyBlogs from "@/components/myBlogs";
 export default async function Home() {
 
 
+
   return (
     <>
-    <Hero/>
+    {/* <Hero/> */}
     <Blogs/>
     <MyBlogs/>
     </>

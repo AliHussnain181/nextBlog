@@ -1,145 +1,160 @@
-"use client"
-import React, { useContext, useEffect, useState } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
-import toast from 'react-hot-toast';
+"use client";
+
+import React, {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useState,
+  FormEvent,
+} from "react";
+import { Editor, } from "@tinymce/tinymce-react";
+import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
-import { Context } from '@/components/context';
+import { Context } from "@/components/context";
+import axios from "axios";
+import Image from "next/image";
+import { editorConfig } from "@/lib/editorConfig";
+
+// TypeScript interfaces
+interface EditorProps {
+  name: string;
+  content: string;
+  category: string;
+  image: File | string;
+}
+
 
 const MyEditor = () => {
-  const [name, setName] = useState('');
-  const [content, setContent] = useState('');
-  const [image, setImage] = useState('');
-  const [category, setCategory] = useState('');
-  const { user, setUser } = useContext(Context);
+  // Component state
+  const [editorData, setEditorData] = useState<EditorProps>({
+    name: "",
+    content: "",
+    category: "",
+    image: "",
+  });
 
-  interface User {
-    role: string;
-    // Add other properties if needed
-  }
+  const [imagePrev, setImagePrev] = useState<string>("");
 
+  const { user } = useContext(Context);
+
+  // Update content from TinyMCE editor
   const handleEditorChange = (content: string) => {
-    // console.log('Content was updated:', content);
-    setContent(content); // Update the content state with the editor content
+    setEditorData((prev) => ({ ...prev, content }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle image file selection
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const selectedImage = files[0];
+      setEditorData((prev) => ({ ...prev, image: selectedImage }));
+
+      // Preview image using FileReader
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setImagePrev(reader.result);
+        }
+      };
+      reader.readAsDataURL(selectedImage);
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const { name, content, category, image } = editorData;
+
+    // Form validation
+    if (!name || !content || !category || !image) {
+      toast.error("All fields are required.");
+      return;
+    }
 
     try {
-
-      // Send data to the server
-      let res = await fetch('api/blog', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, content, image, category }),
-      });
-
-      if (!res.ok) {
-        toast.error(res.statusText);
-      } else {
-        toast.success('Product added successfully!');
+      // Prepare form data for submission
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("content", content);
+      formData.append("category", category);
+      if (image instanceof File) {
+        formData.append("file", image);
       }
 
-      // Clear the form after submission
-      setName('');
-      setContent('');
-      setImage('');
-      setCategory('');
+      // API call to create a new blog
+      const res = await axios.post("/api/blog", formData);
+      if (res.status === 200) {
+        toast.success("Blog post added successfully!");
+        resetForm();
+      } else {
+        toast.error("Failed to add blog post.");
+      }
+    } catch (error) {
+      toast.error("Error: " + (error as Error).message);
     }
-    catch (error) {
-      toast.error((error as Error).message);
-    }
-  }
-
-  const editorConfig = {
-    height: 500,
-    menubar: false,
-    plugins: [
-      'image',
-      'advlist',
-      'autolink',
-      'lists',
-      'link',
-      'image',
-      'charmap',
-      'preview',
-      'anchor',
-      'searchreplace',
-      'visualblocks',
-      'fullscreen',
-      'insertdatetime',
-      'media',
-      'table',
-      'code',
-      'help',
-      'wordcount',
-      'anchor',
-    ],
-    toolbar:
-      "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent code |removeformat | help",
-    content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
   };
 
+  // Reset form after successful submission
+  const resetForm = () => {
+    setEditorData({ name: "", content: "", category: "", image: "" });
+    setImagePrev("");
+  };
+
+  // Check user role for access control
   useEffect(() => {
-    const auth = async () => {
-      try {
-        await ((user as User)?.role !== "admin") ? redirect("/") : undefined;
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    if (user?.role !== "admin") {
+      redirect("/");
+    }
+  }, [user]);
 
-    auth();
-  }, [user]);    
 
-  
   return (
-    <div className="container mx-auto my-8 mt-28">
+    <div className="mx-auto my-8 mt-28">
+      {/* Image preview */}
+      {imagePrev && (
+        <div className="mt-32 flex justify-center">
+          <Image width={1000} height={1000} src={imagePrev} alt="Preview" />
+        </div>
+      )}
+
+      {/* Blog editor form */}
       <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-white p-8 rounded shadow-md">
-        {/* Name Input */}
+        {/* Name input */}
         <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
-            Name:
-          </label>
+          <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
           <input
             type="text"
             id="name"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={editorData.name}
+            onChange={(e) => setEditorData((prev) => ({ ...prev, name: e.target.value }))}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            required
           />
         </div>
 
-        {/* Image URL Input */}
+        {/* Image input */}
         <div className="mb-4">
-          <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
-            Image URL:
-          </label>
+          <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">Image:</label>
           <input
-            type="text"
+            type="file"
             id="image"
-            name="image"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
+            accept=".jpg"
+            onChange={handleImageChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            required
           />
         </div>
 
-        {/* Category Input */}
+        {/* Category input */}
         <div className="mb-4">
-          <label htmlFor="category" className="block text-gray-700 text-sm font-bold mb-2">
-            Category:
-          </label>
+          <label htmlFor="category" className="block text-gray-700 text-sm font-bold mb-2">Category:</label>
           <input
             type="text"
             id="category"
-            name="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={editorData.category}
+            onChange={(e) => setEditorData((prev) => ({ ...prev, category: e.target.value }))}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            required
           />
         </div>
 
@@ -151,11 +166,8 @@ const MyEditor = () => {
           onEditorChange={handleEditorChange}
         />
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
+        {/* Submit button */}
+        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           Submit
         </button>
       </form>
