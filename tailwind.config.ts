@@ -1,13 +1,13 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -17,60 +17,13 @@ const config = {
         "2xl": "1400px",
       },
     },
-    fontFamily:{
-      Roboto:['Roboto', 'sans-serif'],
-      Sofia:['Princess Sofia', 'cursive'],
-      Outfit:['Outfit', 'sans-serif'],
-      Sf:["sofia-pro" ,"sans-serif"]
+    fontFamily: {
+      Roboto: ["Roboto", "sans-serif"],
+      Sofia: ["Princess Sofia", "cursive"],
+      Outfit: ["Outfit", "sans-serif"],
+      Sf: ["sofia-pro", "sans-serif"],
     },
     extend: {
-      typography: {
-        DEFAULT: {
-          css: {
-            color: '#333', // Default text color
-            lineHeight: '1.75',
-            a: {
-              color: '#4f46e5',
-              '&:hover': {
-                color: '#1e3a8a',
-              },
-            },
-            h1: {
-              fontSize: '2.25rem',
-              fontWeight: '700',
-              marginBottom: '1rem',
-            },
-            h2: {
-              fontSize: '1.875rem',
-              fontWeight: '600',
-              marginBottom: '1rem',
-            },
-            p: {
-              fontSize: '1.125rem',
-              marginBottom: '1.25rem',
-            },
-            blockquote: {
-              borderLeftWidth: '4px',
-              borderLeftColor: '#ddd',
-              paddingLeft: '1rem',
-              fontStyle: 'italic',
-              color: '#666',
-            },
-            code: {
-              backgroundColor: '#f9fafb',
-              borderRadius: '0.375rem',
-              padding: '0.25rem 0.5rem',
-              fontSize: '0.875rem',
-            },
-            pre: {
-              backgroundColor: '#2d2d2d',
-              color: '#f5f5f5',
-              borderRadius: '0.375rem',
-              padding: '1rem',
-            },
-          },
-        },
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -125,11 +78,9 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      
     },
-    
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;

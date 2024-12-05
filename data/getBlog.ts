@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 interface BlogType {
   _id: string;
   name: string;
-  content: string;
+  content?: string;
   category: string;
   image: string;
   // Add other properties as needed based on your API response

@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { LiaLongArrowAltRightSolid } from "react-icons/lia";
-import { BlogType } from "@/Types";
+import { BlogType, UserType } from "@/Types";
 import { useContext, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { GrUpdate } from "react-icons/gr";
@@ -31,11 +30,11 @@ const AllBlogs = ({ blogs: initialBlogs }: { blogs: BlogType[] }) => {
     }
   };
 
-  const { user }: any = useContext(Context);
+  const { user }: { user: UserType | null } = useContext(Context);
 
-  const filteredBlogs = Array.isArray(blogs) ? blogs.filter((dt) =>
-    dt.name.toLowerCase().includes(search.toLowerCase()) 
-  ) : []
+  const filteredBlogs = Array.isArray(blogs)
+    ? blogs.filter((dt) => dt.name.toLowerCase().includes(search.toLowerCase()))
+    : [];
 
   return (
     <>
@@ -57,7 +56,7 @@ const AllBlogs = ({ blogs: initialBlogs }: { blogs: BlogType[] }) => {
         <div className="flex justify-center flex-wrap my-7 gap-y-6 font-Sf ">
           {filteredBlogs?.map((dt, i) => (
             <Link
-            href={`/blog/${dt._id}`}
+              href={`/blog/${dt._id}`}
               key={i}
               className={`w-72  ${
                 user && user?.role === "admin" ? "h-[19.9rem]" : "h-72"

@@ -1,5 +1,4 @@
 "use client";
-
 import { UserType } from "@/Types";
 import {
   useState,
@@ -9,33 +8,43 @@ import {
   Dispatch,
   SetStateAction,
   useCallback,
+  useMemo,
 } from "react";
-import { Toaster } from "react-hot-toast";
 
 // Define the context properties interface
 interface ContextProps {
   user: UserType | null;
   setUser: Dispatch<SetStateAction<UserType | null>>;
+  isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
 // Create the context with default values
 export const Context = createContext<ContextProps>({
   user: null,
   setUser: () => {},
+  isAuthenticated: false,
+  isLoading: false,
 });
 
 // Context provider component
-export const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ContextProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<UserType | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Fetch user data from the API
   const fetchUserData = useCallback(async () => {
+    setIsLoading(true); // Start loading
     try {
-      const response = await fetch("/api/auth/me");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
+        cache: "no-store", // Always fetch the latest data
+        credentials: "include", // Ensure cookies or credentials are sent
+      });
 
-      // Check if the response is ok (status in the range 200-299)
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        console.log("Failed to fetch user data. Response not ok:", response.statusText);
       }
 
       const data = await response.json();
@@ -43,22 +52,34 @@ export const ContextProvider: React.FC<{ children: ReactNode }> = ({ children })
       if (data.success) {
         setUser(data.user);
       } else {
-        console.error("Failed to fetch user data:", data.message);
+        console.warn("Failed to fetch user data:", data.message);
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-      // Optionally, you could add toast notifications here to inform the user
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   }, []);
 
+  // Fetch user data on component mount
   useEffect(() => {
     fetchUserData();
-  }, [fetchUserData]); // Use fetchUserData to ensure that it won't change
+  }, [fetchUserData]);
+
+  // Memoize context value to prevent unnecessary renders
+  const contextValue = useMemo(
+    () => ({
+      user,
+      setUser,
+      isAuthenticated: !!user,
+      isLoading,
+    }),
+    [user, isLoading]
+  );
 
   return (
-    <Context.Provider value={{ user, setUser }}>
+    <Context.Provider value={contextValue}>
       {children}
-      <Toaster />
     </Context.Provider>
   );
 };

@@ -1,6 +1,12 @@
 import { checkAuth } from "@/utils/features";
 import { NextResponse } from "next/server";
 
+export const config = {
+  api:{
+    responseLimit: true
+  }
+}
+
 export async function GET() {
   try {
     // Check the user's authentication status

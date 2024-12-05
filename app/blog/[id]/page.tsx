@@ -5,7 +5,8 @@ import { getBlogData } from "@/data/ParamBlog";
 import { Metadata } from "next";
 
 // Metadata generation for dynamic pages
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const params = await props.params;
   try {
     const blog: BlogType = await getBlogData(params.id);
     return {
@@ -21,7 +22,8 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 }
 
 // Main page component for displaying the blog
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   // Fetch the blog data
   let blogData: BlogType | null = null;
   try {
@@ -58,7 +60,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         {/* Blog Content */}
         <div className="overflow-x-hidden">
           <h1 className="text-xl sm:text-3xl font-semibold mx-auto my-2">{blogData.name}</h1>
-          <div>{parse(blogData.content)}</div>
+          <div className="prose">{parse(blogData.content)}</div>
           <p className="mt-4 text-gray-600">Category: {blogData.category}</p>
         </div>
       </div>

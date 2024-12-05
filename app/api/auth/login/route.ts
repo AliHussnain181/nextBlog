@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 
     // Set the cookie with security options based on the environment
     const isProduction = process.env.NODE_ENV === 'production';
-    cookies().set('mntoken', token, {
+    (await cookies()).set('mntoken', token, {
       httpOnly: true,
       secure: isProduction,  // Only set secure flag in production
       path: "/",

@@ -8,8 +8,6 @@ import fs from "fs";
 let isConnected = false;
 
 export const connectToDB = async () => {
-  // Set strict query mode for Mongoose to prevent unknown field queries.
-  mongoose.set("strictQuery", true);
 
   if (!process.env.MONGO_URI) return console.log("Missing MongoDB URL");
 
@@ -36,7 +34,7 @@ export const generateToken = (_id: any) => {
 };
 
 export const checkAuth = async () => {
-  const cookie = cookies();
+  const cookie = await cookies();
 
   let token = cookie.get("mntoken")?.value;
 
@@ -50,7 +48,7 @@ export const checkAuth = async () => {
 };
 
 export const checkAdmin = async () => {
-  const cookie = cookies();
+  const cookie = await cookies();
 
   let token = cookie.get("mntoken")?.value;
 

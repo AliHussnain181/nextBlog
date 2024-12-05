@@ -4,9 +4,9 @@ import { writeFile, unlink } from "fs/promises"; // Don't forget to import unlin
 import { NextResponse } from "next/server";
 
 interface Response {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 async function handleFileUpload(file: File): Promise<string> {
@@ -19,7 +19,8 @@ async function handleFileUpload(file: File): Promise<string> {
   return tempPath;
 }
 
-export async function PUT(req: Request, { params }: Response) {
+export async function PUT(req: Request, props: Response) {
+  const params = await props.params;
   try {
     const isAdmin = await checkAdmin();
     if (!isAdmin) {
@@ -77,7 +78,8 @@ export async function PUT(req: Request, { params }: Response) {
   }
 }
 
-export async function DELETE(req: Request, { params }: Response) {
+export async function DELETE(req: Request, props: Response) {
+  const params = await props.params;
   try {
     const isAdmin = await checkAdmin();
     if (!isAdmin) {

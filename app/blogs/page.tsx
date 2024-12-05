@@ -2,6 +2,8 @@ import { BlogType } from "@/Types";
 import {GetBlogs} from "@/data/getBlog";
 import AllBlogs from "@/components/AllBlogs";
 
+import type { JSX } from "react";
+
 // Component for displaying all blogs
 const BlogsPage = async (): Promise<JSX.Element> => {
   let blogs: BlogType[] = [];

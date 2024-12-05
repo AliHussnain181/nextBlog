@@ -1,5 +1,12 @@
 "use client";
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useState,
+  use,
+  useCallback,
+} from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Context } from "@/components/context";
@@ -20,7 +27,16 @@ interface BlogData {
   category: string;
 }
 
-const Page: React.FC<{ params: { id: string } }> = ({ params }) => {
+export default  function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const id = useCallback(async () => {
+    const id = (await params).id;
+    return id;
+  }, [params]);
+  
   const [name, setName] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [image, setImage] = useState<File | string>("");
@@ -31,13 +47,14 @@ const Page: React.FC<{ params: { id: string } }> = ({ params }) => {
 
   useEffect(() => {
     const checkAccessAndFetchData = async () => {
+      
       if (!user || (user as User).role !== "admin") {
         toast.error("You don't have access to this page.");
         return router.push("/");
       }
 
       try {
-        const res = await axios.get<BlogData>(`/api/blog/${params.id}`);
+        const res = await axios.get<BlogData>(`/api/blog/${id}`);
         if (res.status === 200) {
           const result = res.data;
           setName(result.name);
@@ -53,7 +70,7 @@ const Page: React.FC<{ params: { id: string } }> = ({ params }) => {
     };
 
     checkAccessAndFetchData();
-  }, [user, params.id, router]);
+  }, [user, id, router]);
 
   const handleEditorChange = (content: string) => {
     setContent(content);
@@ -86,7 +103,7 @@ const Page: React.FC<{ params: { id: string } }> = ({ params }) => {
     }
 
     try {
-      const result = await axios.put(`/api/blog/upde/${params.id}`, formData);
+      const result = await axios.put(`/api/blog/upde/${id}`, formData);
       if (result.status === 200) {
         toast.success("Blog updated");
         // router.push("/blogs");
@@ -173,6 +190,4 @@ const Page: React.FC<{ params: { id: string } }> = ({ params }) => {
       </form>
     </div>
   );
-};
-
-export default Page;
+}

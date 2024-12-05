@@ -41,7 +41,7 @@ export async function POST(req: Request) {
 
     // Set the secure cookie options dynamically based on the environment
     const isProduction = process.env.NODE_ENV === 'production';
-    cookies().set('mntoken', token, {
+    (await cookies()).set('mntoken', token, {
       httpOnly: true,
       secure: isProduction,
       sameSite: 'strict',

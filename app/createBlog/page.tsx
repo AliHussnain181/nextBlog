@@ -7,7 +7,7 @@ import React, {
   useState,
   FormEvent,
 } from "react";
-import { Editor, } from "@tinymce/tinymce-react";
+import { Editor } from "@tinymce/tinymce-react";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
 import { Context } from "@/components/context";
@@ -23,33 +23,42 @@ interface EditorProps {
   image: File | string;
 }
 
-
 const MyEditor = () => {
-  // Component state
   const [editorData, setEditorData] = useState<EditorProps>({
     name: "",
     content: "",
     category: "",
     image: "",
   });
-
   const [imagePrev, setImagePrev] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { user } = useContext(Context);
 
-  // Update content from TinyMCE editor
+  // Handle TinyMCE editor content change
   const handleEditorChange = (content: string) => {
     setEditorData((prev) => ({ ...prev, content }));
   };
 
-  // Handle image file selection
+  // Validate image and update state
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
       const selectedImage = files[0];
+
+      // Validate image size and type
+      if (selectedImage.size > 2 * 1024 * 1024) {
+        toast.error("Image size should be less than 2MB.");
+        return;
+      }
+      if (!selectedImage.type.startsWith("image/")) {
+        toast.error("Please upload a valid image.");
+        return;
+      }
+
       setEditorData((prev) => ({ ...prev, image: selectedImage }));
 
-      // Preview image using FileReader
+      // Preview image
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === "string") {
@@ -65,14 +74,15 @@ const MyEditor = () => {
     e.preventDefault();
     const { name, content, category, image } = editorData;
 
-    // Form validation
+    // Validate form fields
     if (!name || !content || !category || !image) {
       toast.error("All fields are required.");
       return;
     }
 
+    setLoading(true);
+
     try {
-      // Prepare form data for submission
       const formData = new FormData();
       formData.append("name", name);
       formData.append("content", content);
@@ -81,20 +91,20 @@ const MyEditor = () => {
         formData.append("file", image);
       }
 
-      // API call to create a new blog
       const res = await axios.post("/api/blog", formData);
-      if (res.status === 200) {
+      if (res.status >= 200 && res.status < 300) {
         toast.success("Blog post added successfully!");
         resetForm();
       } else {
-        toast.error("Failed to add blog post.");
-      }
+        toast.error(`Failed to add blog post. Status: ${res.status}`);      }
     } catch (error) {
-      toast.error("Error: " + (error as Error).message);
+      toast.error(`Error: ${(error as Error).message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Reset form after successful submission
+  // Reset form
   const resetForm = () => {
     setEditorData({ name: "", content: "", category: "", image: "" });
     setImagePrev("");
@@ -102,58 +112,90 @@ const MyEditor = () => {
 
   // Check user role for access control
   useEffect(() => {
-    if (user?.role !== "admin") {
+    if (user && user?.role !== "admin") {
+      console.log(user?.role);
+      console.log(user);
+      
       redirect("/");
     }
   }, [user]);
 
-
   return (
-    <div className="mx-auto my-8 mt-28">
-      {/* Image preview */}
+    <div className="container mx-auto my-8 mt-28">
+      {/* Image Preview */}
       {imagePrev && (
-        <div className="mt-32 flex justify-center">
-          <Image width={1000} height={1000} src={imagePrev} alt="Preview" />
+        <div className="mt-8 flex justify-center">
+          <Image
+            width={500}
+            height={500}
+            src={imagePrev}
+            alt="Preview"
+            className="rounded"
+          />
         </div>
       )}
 
-      {/* Blog editor form */}
-      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-white p-8 rounded shadow-md">
-        {/* Name input */}
+      {/* Blog Editor Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-3xl mx-auto bg-white p-8 rounded shadow-lg"
+      >
+        {/* Name Input */}
         <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+          <label
+            htmlFor="name"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Name:
+          </label>
           <input
             type="text"
             id="name"
             value={editorData.name}
-            onChange={(e) => setEditorData((prev) => ({ ...prev, name: e.target.value }))}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            onChange={(e) =>
+              setEditorData((prev) => ({ ...prev, name: e.target.value }))
+            }
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Enter blog title"
             required
           />
         </div>
 
-        {/* Image input */}
+        {/* Image Input */}
         <div className="mb-4">
-          <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">Image:</label>
+          <label
+            htmlFor="image"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Image:
+          </label>
           <input
             type="file"
             id="image"
-            accept=".jpg"
+            accept=".jpg,.jpeg,.png"
             onChange={handleImageChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
         </div>
 
-        {/* Category input */}
+        {/* Category Input */}
         <div className="mb-4">
-          <label htmlFor="category" className="block text-gray-700 text-sm font-bold mb-2">Category:</label>
+          <label
+            htmlFor="category"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Category:
+          </label>
           <input
             type="text"
             id="category"
             value={editorData.category}
-            onChange={(e) => setEditorData((prev) => ({ ...prev, category: e.target.value }))}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            onChange={(e) =>
+              setEditorData((prev) => ({ ...prev, category: e.target.value }))
+            }
+            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Enter blog category"
             required
           />
         </div>
@@ -161,14 +203,20 @@ const MyEditor = () => {
         {/* TinyMCE Editor */}
         <Editor
           apiKey={process.env.NEXT_PUBLIC_TINY}
-          initialValue="<p>This is the initial content of the editor</p>"
+          initialValue="<p>Start writing your blog content here...</p>"
           init={editorConfig}
           onEditorChange={handleEditorChange}
         />
 
-        {/* Submit button */}
-        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-          Submit
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className={`mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none ${
+            loading ? "cursor-not-allowed opacity-50" : "hover:bg-blue-700"
+          }`}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>

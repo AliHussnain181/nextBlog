@@ -12,7 +12,7 @@ import Image from "next/image";
 
 interface Blog {
   _id: string;
-  imagesrc: string;
+  image: string;
   category: string;
   name: string;
 }
@@ -22,55 +22,62 @@ interface BlogSliderProps {
 }
 
 const BlogSlider: React.FC<BlogSliderProps> = ({ blogs }) => {
-  // Restrict to 7 blogs, fallback to empty array if blogs is not valid
   const blogsData = Array.isArray(blogs) ? blogs.slice(0, 7) : [];
 
-  // Early return for no data
   if (!blogsData.length) {
-    return <div className="text-center text-gray-600">No blogs available</div>;
+    return (
+      <div className="text-center text-gray-500 py-10">
+        No blogs available
+      </div>
+    );
   }
 
   return (
-    <div className="mt-32 w-[75%] h-full mx-auto border-black border-2  bg-cyan-500 ">
-      <Carousel
-        className="bg-slate-100"
-        opts={{
-          align: "start",
-          loop: true,
-          duration: 40,
-        }}
-      >
-        <CarouselContent>
-          {blogsData.map((blog) => (
-            <CarouselItem
-              key={blog._id}
-              // className="w- mx-auto flex flex-col items-center"
-            >
-              <Card>
-                <CardContent 
-                className="flex flex-col items-center justify-center hfull"
-                >
-                  {/* Lazy-loaded Image */}
+    <div className="w-full mx-auto py-16 bg-gradient-to-b from-white to-gray-50">
+      <div className="max-w-6xl mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Featured Blogs
+        </h2>
+        <Carousel
+          className="relative"
+          opts={{
+            align: "start",
+            loop: true,
+            duration: 40,
+          }}
+        >
+          <CarouselContent className="flex gap-6">
+            {blogsData.map((blog) => (
+              <CarouselItem
+                key={blog._id}
+                className="flex-shrink-0 w-[85%] sm:w-[45%] lg:w-[30%] rounded-lg bg-white shadow-lg hover:shadow-2xl transition-all duration-300"
+              >
+                <Card className="overflow-hidden rounded-lg">
                   <Image
-                    className="object-cover object-center rounded-md h[18rem]"
-                    src={blog.imagesrc}
-                    width={1000}
-                    height={1000}
+                    className="object-cover object-center h-80 w-full"
+                    src={blog.image}
+                    width={800}
+                    height={600}
                     alt={blog.name || "Blog image"}
                     placeholder="blur"
-                    blurDataURL="/placeholder.png" // Use a placeholder for faster loading
+                    blurDataURL="/placeholder.png"
                   />
-                  <p className="text-2xl font-semibold mt-4 text-cyan-700 line-clamp-2">
-                    {blog.name}
-                  </p>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+                  <CardContent className="p-4">
+                    <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">
+                      {blog.category}
+                    </p>
+                    <p className="text-lg font-semibold text-gray-800 line-clamp-2">
+                      {blog.name}
+                    </p>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white text-gray-700 rounded-full p-2 shadow-md hover:bg-gray-100 transition" />
+          <CarouselNext className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white text-gray-700 rounded-full p-2 shadow-md hover:bg-gray-100 transition" />
+        </Carousel>
+      </div>
     </div>
   );
 };

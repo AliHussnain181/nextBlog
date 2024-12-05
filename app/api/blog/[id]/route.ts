@@ -7,7 +7,8 @@ interface Params {
     id: string;
 }
 
-export async function GET(req: Request, { params }: { params: Params }) {
+export async function GET(req: Request, props: { params: Promise<Params> }) {
+  const params = await props.params;
   try {
     // Ensure the database is connected
     await connectToDB();

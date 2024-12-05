@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
 
 export interface BlogType {
   _id: string;
