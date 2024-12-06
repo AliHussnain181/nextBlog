@@ -1,7 +1,6 @@
 import { BlogType } from "@/Types";
 import {GetBlogs} from "@/data/getBlog";
-import AllBlogs from "@/components/AllBlogs";
-
+import AllBlogs from "@/components/Blogs/AllBlogs";
 import type { JSX } from "react";
 
 // Component for displaying all blogs

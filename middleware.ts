@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Define route groups for easier management
-const PUBLIC_ROUTES = new Set(["/", "/login"]); // Routes accessible without authentication
+const PUBLIC_ROUTES = new Set(["/login"]); // Routes accessible without authentication
 const PROTECTED_ROUTES = new Set(["/blogs", "/profile"]); // Routes requiring authentication
 
 export function middleware(request: NextRequest) {
@@ -10,11 +10,10 @@ export function middleware(request: NextRequest) {
   const authToken = request.cookies.get("mntoken"); // Get the authentication token from cookies
 
   const isAuthenticated = Boolean(authToken?.value); // Boolean flag for authentication status
-console.log(isAuthenticated);
-
-  // Debugging (remove or disable in production)
-  // console.debug(`Path: ${pathname}, Authenticated: ${isAuthenticated}`);
-
+  
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
   // Handle unauthenticated users
   if (!isAuthenticated) {
     // Redirect if accessing a protected route
