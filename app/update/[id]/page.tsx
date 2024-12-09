@@ -1,19 +1,17 @@
 "use client";
 import React, {
   ChangeEvent,
-  useContext,
   useEffect,
   useState,
-  use,
   useCallback,
 } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Context } from "@/components/context";
 import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
 import axios from "axios";
 import { editorConfig } from "@/lib/editorConfig";
+import useAuthStore from "@/stores/authStore";
 
 interface User {
   role: string;
@@ -42,7 +40,8 @@ export default  function Page({
   const [image, setImage] = useState<File | string>("");
   const [imagePrev, setImagePrev] = useState<string>("");
   const [category, setCategory] = useState<string>("");
-  const { user } = useContext(Context);
+
+  const { user } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {

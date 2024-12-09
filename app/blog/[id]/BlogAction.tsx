@@ -1,16 +1,15 @@
 "use client";
-import { Context } from "@/components/context";
-import { BlogType, UserType } from "@/Types";
+import useAuthStore from "@/stores/authStore";
+import { BlogType } from "@/Types";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { AiFillDelete } from "react-icons/ai";
 import { GrUpdate } from "react-icons/gr";
 
 const BlogAction = ({blog}:{blog:BlogType}) => {
-  const { user }: { user: UserType | null } = useContext(Context);
+  const { user } = useAuthStore();
 
   const router = useRouter();
 

@@ -1,7 +1,6 @@
 "use server";
 import { BlogType } from "@/Types";
 import SearchBlogs from "./SearchBlogs";
-import BlogsDisplay from "./BlogsDisplay";
 
 interface AllBlogsProps {
   blogs: BlogType[];
@@ -15,15 +14,6 @@ const AllBlogs: React.FC<AllBlogsProps> = ({ blogs }) => {
           Discover Our Blogs
         </h1>
       </div>
-
-      {/* <SearchBlogs
-        blogs={blogs}
-        renderFilteredBlogs={(filterdBlogs) => (
-          <>
-            <BlogsDisplay filteredBlogs={filterdBlogs} />
-          </>
-        )}
-      /> */}
             <SearchBlogs blogs={blogs} />
     </section>
   );

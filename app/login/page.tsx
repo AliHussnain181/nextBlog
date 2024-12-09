@@ -1,12 +1,11 @@
 "use client";
-
-import React, { useContext, useState, useEffect, FormEvent } from "react";
-import { Context } from "@/components/context"; // Adjust based on your project structure
+import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
 import { UserType } from "@/Types";
+import useAuthStore from "@/stores/authStore";
 
 // Zod Schema for validation
 const loginSchema = z.object({
@@ -21,32 +20,35 @@ const loginSchema = z.object({
 });
 
 const Login: React.FC = () => {
-  const { user, setUser } = useContext(Context);
   const router = useRouter();
 
   // State variables
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user && user._id) {
-      router.push("/");
-    }
-  }, [user, router]);
+  const fetchUser = useAuthStore((state) => state.fetchUser);
 
-  // Validate Inputs with Zod
+  // Validate Inputs with Zod and return errors
   const validateInputs = (): boolean => {
     const result = loginSchema.safeParse({ email, password });
 
     if (!result.success) {
-      // Display validation errors using toast
-      const errorMessages = result.error.errors.map((err) => err.message);
-      errorMessages.forEach((msg) => toast.error(msg));
+      const errorMessages: { email?: string; password?: string } = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0] === "email") {
+          errorMessages.email = err.message;
+        }
+        if (err.path[0] === "password") {
+          errorMessages.password = err.message;
+        }
+      });
+      setErrors(errorMessages); // Set errors in state
       return false;
     }
 
+    setErrors({}); // Clear errors if validation is successful
     return true;
   };
 
@@ -60,7 +62,7 @@ const Login: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/auth/login`, {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
         headers: { "Content-Type": "application/json" },
@@ -73,8 +75,7 @@ const Login: React.FC = () => {
         toast.error(data.message || "Login failed. Please try again.");
         return;
       }
-
-      setUser(data.user as UserType); // Assuming data.user has _id property
+      await fetchUser()
       toast.success("Login successful!");
       router.push("/"); // Redirect to home or dashboard
     } catch (error) {
@@ -108,6 +109,9 @@ const Login: React.FC = () => {
             placeholder="Enter your email"
             aria-required="true"
           />
+          {errors.email && (
+            <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+          )}
 
           <label htmlFor="password" className="text-sm font-medium">
             Password
@@ -122,6 +126,9 @@ const Login: React.FC = () => {
             placeholder="Enter your password"
             aria-required="true"
           />
+          {errors.password && (
+            <p className="text-xs text-red-500 mt-1">{errors.password}</p>
+          )}
         </div>
 
         <button

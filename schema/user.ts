@@ -2,6 +2,7 @@ import mongoose, { Document, Model } from "mongoose";
 
 // Define the User interface
 interface IUser extends Document {
+  _id:string
   name: string;
   email: string;
   password: string;

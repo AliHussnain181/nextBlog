@@ -13,7 +13,6 @@ const BlogsPage = async (): Promise<JSX.Element> => {
     blogs = blogData;
   } catch (error) {
     console.error("Error fetching blogs:", error);
-    // Handle errors by possibly setting an empty array or showing an error message in the UI
   }
 
   return (

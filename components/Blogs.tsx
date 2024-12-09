@@ -1,12 +1,11 @@
 import {GetBlogs} from "@/data/getBlog";
 import BlogSlider from "./blogSlider";
 const Blogs = async () => {
-  const blogData = GetBlogs();
-  const blogs = await blogData;
+  const blogData = await GetBlogs();
 
   return (
     <>
-      <BlogSlider blogs={blogs} />
+      <BlogSlider blogs={blogData} />
     </>
   );
 };

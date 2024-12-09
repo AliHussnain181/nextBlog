@@ -10,10 +10,10 @@ import React, {
 import { Editor } from "@tinymce/tinymce-react";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
-import { Context } from "@/components/context";
 import axios from "axios";
 import Image from "next/image";
 import { editorConfig } from "@/lib/editorConfig";
+import useAuthStore from "@/stores/authStore";
 
 // TypeScript interfaces
 interface EditorProps {
@@ -33,7 +33,7 @@ const MyEditor = () => {
   const [imagePrev, setImagePrev] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { user } = useContext(Context);
+  const { user } = useAuthStore();
 
   // Handle TinyMCE editor content change
   const handleEditorChange = (content: string) => {

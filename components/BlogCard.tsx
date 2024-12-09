@@ -23,12 +23,12 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => (
         priority
       />
       <div className="absolute bottom-0 left-12 mx-7">
-        <p className="text-3xl">{blog.category}</p>
-        <p className="text-2xl">{blog.name}</p>
+        <h2 className="text-3xl">{blog.category}</h2>
+        <h3 className="text-2xl">{blog.name}</h3>
         <Link href={`/blog/${blog._id}`}>
-          <p className="border-green-500 border-[3px] my-6 text-2xl py-3 px-9 rounded-full font-Sf hover:bg-green-500 hover:text-white transition-all duration-300">
+          <h2 className="border-green-500 border-[3px] my-6 text-2xl py-3 px-9 rounded-full font-Sf hover:bg-green-500 hover:text-white transition-all duration-300">
             Learn More
-          </p>
+          </h2>
         </Link>
       </div>
     </div>

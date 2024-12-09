@@ -1,11 +1,11 @@
 import { checkAuth } from "@/utils/features";
 import { NextResponse } from "next/server";
 
-export const config = {
-  api:{
-    responseLimit: true
-  }
-}
+// export const config = {
+//   api:{
+//     responseLimit: true
+//   }
+// }
 
 export async function GET() {
   try {
@@ -18,7 +18,7 @@ export async function GET() {
         success: false,
         message: "You must be logged in to access this resource."
       }, { status: 401 });
-    }
+    }    
 
     // Return user data if authenticated
     return NextResponse.json({

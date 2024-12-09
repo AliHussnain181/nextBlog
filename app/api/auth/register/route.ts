@@ -7,9 +7,9 @@ import { z } from 'zod';  // Using Zod for schema validation
 
 // Define input validation schema using Zod
 const userSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  name: z.string().min(3, 'Name is required'),
   email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters long'),
+  password: z.string().min(6, 'Password must be at least 8 characters long'),
 });
 
 export async function POST(req: Request) {
@@ -37,13 +37,13 @@ export async function POST(req: Request) {
     const user = await User.create({ name, email, password: hashedPassword });
 
     // Generate authentication token
-    const token = generateToken(user._id);
+    const token = generateToken(user._id as string);
 
     // Set the secure cookie options dynamically based on the environment
-    const isProduction = process.env.NODE_ENV === 'production';
-    (await cookies()).set('mntoken', token, {
+
+    (await cookies()).set('blogtoken', token, {
       httpOnly: true,
-      secure: isProduction,
+      secure: true,
       sameSite: 'strict',
       path: "/",
       maxAge: 15 * 24 * 60 * 60 * 1000,  // 15 days

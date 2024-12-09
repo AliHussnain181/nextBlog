@@ -7,10 +7,11 @@ const PROTECTED_ROUTES = new Set(["/blogs", "/profile"]); // Routes requiring au
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl; // Extract the path
-  const authToken = request.cookies.get("mntoken"); // Get the authentication token from cookies
+  
+  const authToken = request.cookies.get("blogtoken"); // Get the authentication token from cookies
 
   const isAuthenticated = Boolean(authToken?.value); // Boolean flag for authentication status
-  
+
   if (pathname === "/") {
     return NextResponse.next();
   }
@@ -35,7 +36,9 @@ export function middleware(request: NextRequest) {
   }
 
   // Fallback (shouldn't be reached in normal cases)
-  console.error("Unexpected middleware flow. Please check routes configuration.");
+  console.error(
+    "Unexpected middleware flow. Please check routes configuration."
+  );
   return NextResponse.next();
 }
 

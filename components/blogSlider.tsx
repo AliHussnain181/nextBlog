@@ -26,9 +26,7 @@ const BlogSlider: React.FC<BlogSliderProps> = ({ blogs }) => {
 
   if (!blogsData.length) {
     return (
-      <div className="text-center text-gray-500 py-10">
-        No blogs available
-      </div>
+      <h2 className="text-center text-gray-500 py-10">No blogs available</h2>
     );
   }
 
@@ -63,12 +61,12 @@ const BlogSlider: React.FC<BlogSliderProps> = ({ blogs }) => {
                     blurDataURL="/placeholder.png"
                   />
                   <CardContent className="p-4">
-                    <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">
+                    <h2 className="text-xs text-gray-400 uppercase tracking-wide mb-2">
                       {blog.category}
-                    </p>
-                    <p className="text-lg font-semibold text-gray-800 line-clamp-2">
+                    </h2>
+                    <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">
                       {blog.name}
-                    </p>
+                    </h3>
                   </CardContent>
                 </Card>
               </CarouselItem>

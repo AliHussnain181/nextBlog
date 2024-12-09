@@ -5,7 +5,7 @@ export async function GET() {
   try {
     // Delete the authentication token (mntoken) cookie
     const cookieStore = await cookies();
-    cookieStore.delete('mntoken'); // This will remove the cookie from the client
+    cookieStore.delete('blogtoken'); // This will remove the cookie from the client
 
     // Return a success response
     return NextResponse.json({

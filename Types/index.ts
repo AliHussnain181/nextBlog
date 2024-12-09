@@ -7,8 +7,8 @@ export interface BlogType {
 }
 
 export interface UserType {
-  _id: string;
+  _id?: string;
   name: string;
   email: string;
-  role: "admin" | "user";
+  role?: "admin" | "user";
 }

@@ -3,8 +3,6 @@ import Image from "next/image";
 import { BlogType } from "@/Types";
 import { getBlogData } from "@/data/ParamBlog";
 import { Metadata } from "next";
-import axios from "axios";
-import toast from "react-hot-toast";
 import BlogAction from "./BlogAction";
 
 // Metadata generation for dynamic pages
@@ -70,7 +68,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           <div className="prose">
             {parse(blogData.content ?? "No content available.")}
           </div>
-          <p className="mt-4 text-gray-600">Category: {blogData.category}</p>
+          <h2 className="mt-4 text-gray-600">Category: {blogData.category}</h2>
         </div>
       </div>
       <BlogAction blog={blogData}/>

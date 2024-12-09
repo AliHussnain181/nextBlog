@@ -1,5 +1,3 @@
-import axios, { AxiosError } from "axios";
-
 // Define the Blog type to ensure type safety and clarity
 interface BlogType {
   _id: string;
@@ -10,42 +8,63 @@ interface BlogType {
   // Add other properties as needed based on your API response
 }
 
-// Function to fetch blogs with a default API URL
+// Retry function to handle retries in case of failure
+const fetchWithRetry = async <T>(
+  url: string,
+  retries: number = 3,
+  delay: number = 1000
+): Promise<T> => {
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      cache: "force-cache", // Next.js caching feature
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Check if the response status is not ok
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
+
+    const result: T = await response.json();
+    return result;
+  } catch (error) {
+    if (retries === 0) {
+      throw new Error("Max retries reached. Failed to fetch data.");
+    }
+    console.warn(`Retrying... (${retries} retries left)`);
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    return fetchWithRetry<T>(url, retries - 1, delay);
+  }
+};
+
+/// Function to fetch blogs with a default API URL
 export const GetBlogs = async (
   apiUrl: string = "http://localhost:3000/api/blog"
 ): Promise<BlogType[]> => {
   try {
-    // Make an HTTP GET request to the API endpoint
-    const response = await axios.get<BlogType[]>(apiUrl);
+    // Call the retry-enabled fetch function
+    const result = await fetchWithRetry<{ data: BlogType[] }>(apiUrl);
 
-    // Check if the response status is not 200 and handle the error
-    if (response.status !== 200) {
-      throw new Error(`Unexpected status code: ${response.status}`);
+    // Validate the response data structure: Ensure it has a "data" property which is an array
+    if (!result || !Array.isArray(result)) {
+      throw new Error("Invalid API response structure.");
     }
 
-    // Return the blog data if the response is successful
-    return response.data;
+    // Return the blog data
+    return result;
   } catch (error: unknown) {
-    // Handle Axios-specific errors
-    if (axios.isAxiosError(error)) {
-      console.error("Axios Error:", error.message);
+    // Log detailed error for debugging
+    console.error("An error occurred while fetching blog data:", error);
 
-      // Throw a new error with a more descriptive message
-      throw new Error(
-        `Failed to fetch blogs: ${
-          error.response?.data?.message || error.message
-        }`
-      );
-    }
-
-    // Handle general JavaScript errors
+    // Handle specific error cases more gracefully
     if (error instanceof Error) {
-      console.error("General Error:", error.message);
-      throw new Error(`An error occurred: ${error.message}`);
+      console.error("Error message:", error.message);
     }
 
-    // Catch-all for unknown error types
-    console.error("Unknown Error:", error);
-    throw new Error("Failed to fetch blogs due to an unknown error.");
+    // Rethrow error for further handling by the caller
+    throw error;
   }
 };

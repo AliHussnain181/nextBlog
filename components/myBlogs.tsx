@@ -4,12 +4,6 @@ import { LiaLongArrowAltRightSolid } from "react-icons/lia";
 import {GetBlogs} from "@/data/getBlog";
 import { BlogType } from "@/Types";
 
-// Loading Component
-const LoadingIndicator = () => (
-  <div className="text-center py-16">
-    <p className="text-xl">Loading...</p>
-  </div>
-);
 
 // Main Component to Display Blogs
 const MyBlogs: React.FC = async () => {
@@ -22,11 +16,11 @@ const MyBlogs: React.FC = async () => {
         <h2 className="text-3xl xl:text-[40px] font-semibold">
           We’re in the business of bringing out the best in our clients.
         </h2>
-        <p className="text-[22px] font-[550]">
+        <h3 className="text-[22px] font-[550]">
           In a time of marketing start-ups, there is something reassuring about
           20 years of experience delivering powerful creative solutions for
           clients of all sizes in so many different sectors.
-        </p>
+        </h3>
       </div>
 
       <div className="w-full lg:w-[90%] mx-auto gap-y-11 my-10 sm:grid sm:grid-cols-2">
@@ -43,7 +37,7 @@ const MyBlogs: React.FC = async () => {
 // Fetch blogs with improved error handling
 const fetchBlogs = async (): Promise<BlogType[]> => {
   try {
-    const blogData = await GetBlogs();
+    const blogData = await GetBlogs();    
     return Array.isArray(blogData) ? blogData.slice(0, 4) : [];
   } catch (error) {
     console.error("Error fetching blogs:", error);
@@ -54,7 +48,7 @@ const fetchBlogs = async (): Promise<BlogType[]> => {
 // Error Message Component
 const ErrorMessage: React.FC = () => (
   <div className="text-center text-red-500">
-    <p>Failed to load blogs. Please try again later.</p>
+    <h1>Failed to load blogs. Please try again later.</h1>
   </div>
 );
 
@@ -76,9 +70,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => (
       loading="lazy" // Lazy-load the image
     />
     <div className="px-4 space-y-5 font-Sf">
-      <p className="text-[19px] font-semibold text-[#379475]">
+      <h2 className="text-[19px] font-semibold text-[#379475]">
         {blog.category}
-      </p>
+      </h2>
       <h3 className="text-[19px] font-semibold">{blog.name}</h3>
       <Link href={`/blog/${blog._id}`} >
         <span className="flex items-center text-[19px] font-semibold w-fit cursor-pointer">

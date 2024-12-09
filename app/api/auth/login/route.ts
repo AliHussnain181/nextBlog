@@ -39,13 +39,13 @@ export async function POST(req: Request) {
     }
 
     // Generate an authentication token for the user
-    const token = generateToken(user._id);
+    const token = generateToken(user._id as string) ;
 
     // Set the cookie with security options based on the environment
-    const isProduction = process.env.NODE_ENV === 'production';
-    (await cookies()).set('mntoken', token, {
+
+    (await cookies()).set('blogtoken', token, {
       httpOnly: true,
-      secure: isProduction,  // Only set secure flag in production
+      secure: true,  // Only set secure flag in production
       path: "/",
       sameSite: 'strict',
       maxAge: 15 * 24 * 60 * 60 * 1000  // 15 days

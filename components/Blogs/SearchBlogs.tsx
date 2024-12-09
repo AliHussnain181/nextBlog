@@ -1,15 +1,9 @@
 "use client";
-import React, { useMemo, useState } from 'react';
-import { BlogType } from '@/Types';
-import type { JSX } from "react";
-import BlogsDisplay from './BlogsDisplay';
+import React, { useMemo, useState } from "react";
+import { BlogType } from "@/Types";
+import BlogsDisplay from "./BlogsDisplay";
 
-
-const SearchBlogs = React.memo(({
-  blogs,
-}: {
-  blogs: BlogType[];
-}) => {
+const SearchBlogs = React.memo(({ blogs }: { blogs: BlogType[] }) => {
   const [search, setSearch] = useState("");
 
   const filteredBlogs = useMemo(() => {
@@ -30,9 +24,11 @@ const SearchBlogs = React.memo(({
           aria-label="Search blogs by title"
         />
       </div>
-     <BlogsDisplay filteredBlogs={filteredBlogs} />
+      <BlogsDisplay filteredBlogs={filteredBlogs} />
     </div>
   );
 });
+
+SearchBlogs.displayName = "SearchBlogs";
 
 export default SearchBlogs;
