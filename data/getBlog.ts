@@ -42,7 +42,7 @@ const fetchWithRetry = async <T>(
 
 /// Function to fetch blogs with a default API URL
 export const GetBlogs = async (
-  apiUrl: string = "http://localhost:3000/api/blog"
+  apiUrl: string = `${process.env.NEXT_PUBLIC_API_URL}/api/blog`
 ): Promise<BlogType[]> => {
   try {
     // Call the retry-enabled fetch function
@@ -68,3 +68,5 @@ export const GetBlogs = async (
     throw error;
   }
 };
+
+

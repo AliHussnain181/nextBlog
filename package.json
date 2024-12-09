@@ -12,7 +12,7 @@
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slot": "^1.1.0",
     "@tailwindcss/typography": "^0.5.15",
-    "@tinymce/tinymce-react": "^4.3.0",
+    "@tinymce/tinymce-react": "^5.1.1",
     "@types/node": "20.4.2",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
@@ -31,7 +31,7 @@
     "lucide-react": "^0.263.1",
     "mongoose": "^8.8.4",
     "next": "15.0.3",
-    "postcss": "8.4.26",
+    "postcss": "^8.4.49",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-hot-toast": "^2.4.1",
@@ -41,13 +41,14 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.1.6",
     "vaul": "^0.8.0",
+    "zod": "^3.23.8",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@babel/types": "^7.26.0",
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.2",
-    "shadcn": "^2.1.6"
+    "shadcn": "^1.0.0"
   },
   "overrides": {
     "@types/react": "npm:types-react@19.0.0-rc.1",

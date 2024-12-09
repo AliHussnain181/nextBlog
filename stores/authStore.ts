@@ -28,8 +28,8 @@ const apiRequest = async (url: string, options: RequestInit = {}) => {
 
     return response.json();
   } catch (error) {
-    console.error(`API Request Error (${url}):`, error);
-    throw error;
+    console.log(`API Request Error (${url}):`, error);
+    // throw error;
   }
 };
 

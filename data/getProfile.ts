@@ -9,7 +9,7 @@ export async function GetProfile() {
     );
 
     if (!response.ok) {
-      console.error(`Error fetching profile: ${response.status} ${response.statusText}`);
+      console.log(`Error fetching profile: ${response.status} ${response.statusText}`);
       return null; // Gracefully handle non-2xx status codes
     }
 
@@ -17,13 +17,13 @@ export async function GetProfile() {
 
     // Optional: Validate structure of `user` (e.g., check required fields)
     if (!user) {
-      console.error("Invalid user data received");
+      console.log("Invalid user data received");
       return null;
     }
 
     return user.user; // Return the user object
   } catch (error) {
-    console.error("Error occurred while fetching user profile:", error);
+    console.log("Error occurred while fetching user profile:", error);
     return null; // Return null to handle gracefully in UI
   }
 }

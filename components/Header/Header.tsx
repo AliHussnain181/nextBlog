@@ -1,14 +1,25 @@
 "use client";
+
+import { useEffect } from "react";
 import HeaderClient from "./HeaderClient";
 import useAuthStore from "@/stores/authStore";
 
 const Header = () => {
+  const { user, fetchUser } = useAuthStore();
 
-  const { user } = useAuthStore();
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        if (!user) {
+          await fetchUser();
+          }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
 
-console.log(user);
-// console.log(isLoading);
-
+    loadUser();
+  }, [user, fetchUser]);
 
   return (
     <header>

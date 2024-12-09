@@ -1,20 +1,36 @@
-import parse from "html-react-parser";
-import Image from "next/image";
 import { BlogType } from "@/Types";
 import { getBlogData } from "@/data/ParamBlog";
-import { Metadata } from "next";
+import parse from "html-react-parser";
+import Image from "next/image";
 import BlogAction from "./BlogAction";
+// import { GetBlogs } from "@/data/getBlog";
+
+
+// export async function generateStaticParams() {
+//   try {
+//     const blogs = (await GetBlogs())?.slice(0,3);
+//     return blogs.map((blog) => ({
+//       id: blog._id.toString(),
+//     }));
+//   } catch (error) {
+//     console.error("Error generating static params:", error);
+//     return [];
+//   }
+// }
+
 
 // Metadata generation for dynamic pages
-export async function generateMetadata(props: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const params = await props.params;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const uid = (await params).id;
   try {
-    const blog: BlogType = await getBlogData(params.id);
+    const blog: BlogType = await getBlogData(uid);
     return {
       title: blog.name,
-      description: blog.content?.substring(0, 150), // Trimming content for meta description
+      description: blog.content?.substring(0, 150), // Trimmed content for meta description
     };
   } catch (error) {
     return {
@@ -25,17 +41,23 @@ export async function generateMetadata(props: {
 }
 
 // Main page component for displaying the blog
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  // Fetch the blog data
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  // Fetch the blog data for the given `id`
   let blogData: BlogType | null = null;
+  
+  const uid = (await params).id;
+  
   try {
-    blogData = await getBlogData(params.id);
+    blogData = await getBlogData(uid); // Fetch blog data by ID
   } catch (error) {
     console.error("Error fetching blog data:", error);
   }
 
-  // If the blog data is not available, show a loading or error message
+  // If the blog data is not available, show an error message
   if (!blogData) {
     return (
       <div className="p-4 my-28 h-auto text-center">
@@ -55,7 +77,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
             src={blogData.image}
             alt={blogData.name || "image"}
             className="rounded-md object-cover h-64 sm:h-80 md:h-96"
-            //  loading="lazy"
             priority
           />
         </div>
@@ -71,7 +92,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           <h2 className="mt-4 text-gray-600">Category: {blogData.category}</h2>
         </div>
       </div>
-      <BlogAction blog={blogData}/>
+      {/* client component */}
+      <BlogAction blog={blogData} />
     </div>
   );
 }

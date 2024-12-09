@@ -6,7 +6,7 @@ export const getBlogData = async (id: string): Promise<BlogType> => {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/api/blog/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${id}`, {
       cache: "force-cache",
     });
 
