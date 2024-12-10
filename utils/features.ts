@@ -4,7 +4,6 @@ import { User } from "@/schema/user";
 import { cookies } from "next/headers";
 import cloudinary from "cloudinary";
 import fs from "fs";
-import { NextRequest } from "next/server";
 
 let isConnected = false;
 
@@ -28,6 +27,8 @@ export const connectToDB = async () => {
     console.log(error);
   }
 };
+
+connectToDB()
 
 export const generateToken = (_id: string): string => {
   return jwt.sign({ _id }, process.env.JWT_SECRET!, { expiresIn: "12h" });
@@ -118,12 +119,12 @@ export const deleteFromCloudinary = async (publicId: string): Promise<any> => {
 };
 
 
-export const fetcher = async <T>(url: string, options?: RequestInit): Promise<T> => {
-  const response = await fetch(url, { credentials: "include", ...options });
+// export const fetcher = async <T>(url: string, options?: RequestInit): Promise<T> => {
+//   const response = await fetch(url, { credentials: "include", ...options });
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
+//   if (!response.ok) {
+//     throw new Error(response.statusText);
+//   }
 
-  return response.json();
-};
+//   return response.json();
+// };

@@ -7,7 +7,7 @@ export const getBlogData = async (id: string): Promise<BlogType> => {
 
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${id}`, {
-      cache: "force-cache",
+      cache: "no-cache",
     });
 
     // Check if the response status is in the range 200-299
@@ -21,7 +21,7 @@ export const getBlogData = async (id: string): Promise<BlogType> => {
     }
 
     const result = await response.json();
-
+    
     return result.data;
   } catch (error: any) {
     console.error("An error occurred while fetching blog data:", error);

@@ -120,6 +120,17 @@ export async function GET() {
   try {
     await connectToDB();
     const blogs = await Blog.find().select("-__v -content -createdAt");
+    
+    if (!blogs || blogs.length === 0) {
+      return NextResponse.json(
+        {
+          message: 'No blogs found',
+          success: false,
+          data: [],
+        },
+        { status: 404 }
+      );
+    }
     return NextResponse.json(blogs, { status: 200 });
   } catch (error) {
     console.error("Error in GET:", error);

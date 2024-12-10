@@ -3,21 +3,6 @@ import { getBlogData } from "@/data/ParamBlog";
 import parse from "html-react-parser";
 import Image from "next/image";
 import BlogAction from "./BlogAction";
-// import { GetBlogs } from "@/data/getBlog";
-
-
-// export async function generateStaticParams() {
-//   try {
-//     const blogs = (await GetBlogs())?.slice(0,3);
-//     return blogs.map((blog) => ({
-//       id: blog._id.toString(),
-//     }));
-//   } catch (error) {
-//     console.error("Error generating static params:", error);
-//     return [];
-//   }
-// }
-
 
 // Metadata generation for dynamic pages
 export async function generateMetadata({

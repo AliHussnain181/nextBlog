@@ -12,7 +12,8 @@ const Header = () => {
       try {
         if (!user) {
           await fetchUser();
-          }
+          
+        }
       } catch (error) {
         console.error("Failed to fetch user:", error);
       }
